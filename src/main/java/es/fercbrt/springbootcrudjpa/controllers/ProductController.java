@@ -38,9 +38,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
         Optional<Product> optionalProduct = productService.update(id, product);
-        if (optionalProduct.isPresent())
-            return ResponseEntity.ok(optionalProduct.get());
-        return ResponseEntity.notFound().build();
+        return optionalProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
