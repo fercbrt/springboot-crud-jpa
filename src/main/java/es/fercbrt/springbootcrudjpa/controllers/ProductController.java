@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -36,8 +37,10 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
-        product.setId(id);
-        return ResponseEntity.ok(productService.update(product));
+        Optional<Product> optionalProduct = productService.update(id, product);
+        if (optionalProduct.isPresent())
+            return ResponseEntity.ok(optionalProduct.get());
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
