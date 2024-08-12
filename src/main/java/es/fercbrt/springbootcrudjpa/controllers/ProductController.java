@@ -2,6 +2,7 @@ package es.fercbrt.springbootcrudjpa.controllers;
 
 import es.fercbrt.springbootcrudjpa.entities.Product;
 import es.fercbrt.springbootcrudjpa.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,12 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
+    public ResponseEntity<Product> save(@RequestBody @Valid Product product) {
         return ResponseEntity.ok(productService.save(product));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid Product product) {
         Optional<Product> optionalProduct = productService.update(id, product);
         return optionalProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
