@@ -5,9 +5,12 @@ import es.fercbrt.springbootcrudjpa.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,12 +35,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody @Valid Product product) {
+    public ResponseEntity<?> save(@RequestBody @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors())
+            return validation(bindingResult);
         return ResponseEntity.ok(productService.save(product));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid Product product) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors())
+            return validation(bindingResult);
         Optional<Product> optionalProduct = productService.update(id, product);
         return optionalProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -46,5 +53,15 @@ public class ProductController {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    private ResponseEntity<?> validation(BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+
+        bindingResult.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "The field " + err.getField() + " " + err.getDefaultMessage());
+        });
+
+        return ResponseEntity.badRequest().body(errors);
     }
 }
