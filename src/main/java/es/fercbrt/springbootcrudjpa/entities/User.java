@@ -28,8 +28,9 @@ public class User {
     @Size(min = 8, max = 60)
     @Column(nullable = false)
     private String password;
-    @Column(name = "enabled", nullable = false, columnDefinition = "boolean default true")
-    private boolean enabled;
+    //When the attribute is a Boolean object, the default value is null, so the database column set it true
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled;
 
     @ManyToMany
     @JoinTable(
@@ -40,6 +41,7 @@ public class User {
     )
     private List<Role> roles;
 
+    // When the attribute is a primitive boolean, the default value is false
     @Transient
     @JsonProperty("isAdmin")
     private boolean isAdmin;
