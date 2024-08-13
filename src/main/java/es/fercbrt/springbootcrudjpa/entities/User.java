@@ -1,6 +1,8 @@
 package es.fercbrt.springbootcrudjpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import es.fercbrt.springbootcrudjpa.validations.ExistsByUsername;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,6 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ExistsByUsername
     @NotBlank
     @Size(min = 4, max = 16)
     @Column(name = "name", nullable = false, unique = true)
@@ -31,6 +34,7 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"})
     @ManyToMany
     @JoinTable(
         name = "user_role",

@@ -1,9 +1,12 @@
 package es.fercbrt.springbootcrudjpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +19,10 @@ public class Role {
     private Long id;
     @Column(nullable = false)
     private String name;
+
+    @JsonIgnoreProperties({"roles", "handler", "hibernateLazyInitializer"})
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
     @Override
     public String toString() {
