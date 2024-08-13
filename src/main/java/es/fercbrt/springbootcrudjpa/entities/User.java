@@ -1,5 +1,6 @@
 package es.fercbrt.springbootcrudjpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,9 +24,12 @@ public class User {
     @Column(name = "name", nullable = false, unique = true)
     private String username;
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 8, max = 60)
     @Column(nullable = false)
     private String password;
+    @Column(name = "enabled", nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled;
 
     @ManyToMany
     @JoinTable(
@@ -37,5 +41,6 @@ public class User {
     private List<Role> roles;
 
     @Transient
-    private boolean admin;
+    @JsonProperty("isAdmin")
+    private boolean isAdmin;
 }
