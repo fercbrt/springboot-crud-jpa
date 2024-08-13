@@ -34,8 +34,8 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"})
-    @ManyToMany
+    @JsonIgnoreProperties({"users"})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role",
         joinColumns = @JoinColumn(name = "user_id"),
