@@ -16,4 +16,12 @@ public class Role {
     private Long id;
     @Column(nullable = false)
     private String name;
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                "}";
+    }
 }
